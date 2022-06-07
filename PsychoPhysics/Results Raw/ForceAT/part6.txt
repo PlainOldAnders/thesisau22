@@ -1,0 +1,62 @@
+Distance: 4
+Direction:CW
+No. of runs: 8
+Stopping points:196^135v148^135v188^151v180^127v
+Average Threshold:157.5
+
+Distance: 1
+Direction:CW
+No. of runs: 8
+Stopping points:164^119v164^135v172^135v172^127v
+Average Threshold:148.5
+
+Distance: 0
+Direction:CW
+No. of runs: 8
+Stopping points:164^127v172^127v180^127v172^135v
+Average Threshold:150.5
+
+Distance: 2
+Direction:CW
+No. of runs: 8
+Stopping points:156^135v164^119v172^135v164^127v
+Average Threshold:146.5
+
+Distance: 3
+Direction:CW
+No. of runs: 8
+Stopping points:172^143v180^135v180^127v180^135v
+Average Threshold:156.5
+
+
+
+Distance: 2
+Direction:CCW
+No. of runs: 8
+Stopping points:164^135v180^135v180^119v180^119v
+Average Threshold:151.5
+
+Distance: 3
+Direction:CCW
+No. of runs: 8
+Stopping points:188^143v188^143v188^159v180^127v
+Average Threshold:164.5
+
+Distance: 0
+Direction:CCW
+No. of runs: 8
+Stopping points:172^127v164^111v180^95v212^119v
+Average Threshold:147.5
+
+Distance: 4
+Direction:CCW
+No. of runs: 8
+Stopping points:204^135v204^135v188^103v228^143v
+Average Threshold:167.5
+
+Distance: 1
+Direction:CCW
+No. of runs: 8
+Stopping points:172^135v180^127v180^127v164^111v
+Average Threshold:149.5
+

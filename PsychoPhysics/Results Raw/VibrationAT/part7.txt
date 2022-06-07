@@ -1,0 +1,67 @@
+(0,0)(0,-1)(-2,0)(0,3)(4,0)(0,-5)(-6,0)(0,7)(9,0)(0,-11)(-13,0)
+Distance: {7}
+Direction:both
+No. of runs: 8
+Stopping points:90^100v85^115v105^120v110^130v
+Average Threshold:106.875
+
+Distance: {3}
+Direction:both
+No. of runs: 8
+Stopping points:70^70v70^55v65^55v50^70v
+Average Threshold:63.125
+
+Distance: {4}
+Direction:both
+No. of runs: 8
+Stopping points:70^75v80^70v75^70v80^65v
+Average Threshold:73.125
+
+Distance: {11}
+Direction:both
+No. of runs: 8
+Stopping points:255^246v240^236v225^236v255^251v
+Average Threshold:243.0
+
+Distance: {9}
+Direction:both
+No. of runs: 8
+Stopping points:165^156v165^156v155^161v165^151v
+Average Threshold:159.25
+
+Distance: {6}
+Direction:both
+No. of runs: 8
+Stopping points:70^65v85^65v65^65v65^75v
+Average Threshold:69.375
+
+Distance: {13}
+Direction:both
+No. of runs: 8
+Stopping points:255^226v220^226v255^211v225^226v
+Average Threshold:230.5
+
+Distance: {0}
+Direction:both
+No. of runs: 8
+Stopping points:30^30v35^40v35^20v25^25v
+Average Threshold:30.0
+
+Distance: {1}
+Direction:both
+No. of runs: 8
+Stopping points:25^25v25^25v30^25v25^20v
+Average Threshold:25.0
+
+Distance: {5}
+Direction:both
+No. of runs: 8
+Stopping points:50^40v45^40v40^50v60^50v
+Average Threshold:46.875
+
+Distance: {2}
+Direction:both
+No. of runs: 8
+Stopping points:35^30v35^35v55^30v35^35v
+Average Threshold:36.25
+

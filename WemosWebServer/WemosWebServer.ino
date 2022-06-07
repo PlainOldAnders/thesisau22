@@ -47,9 +47,11 @@ bool rhythmState = true;
 unsigned long previousMillisVib = 0;
 unsigned long previousMillis = 0;
 int commonIntensity = 0;
-int commonIntensityTarget = 200;
+int commonIntensityTarget = 0;
 long commonRhythmFreq = 1000;
 long intervalVib = 10;
+
+long debugStart = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -102,20 +104,27 @@ void setup() {
 
 void loop() {
   //Handle server stuff
+  unsigned long currentMillis = millis();
   WiFiClient client = server.available();
 
+  debugStart = millis();
   if (client) {
-    Serial.println("New Client.");
+
+    //analogWrite(en1, 0);
+    //Serial.println("New Client." + String(millis()));
+
     String currentLine = "";
     currentTime = millis();
     previousTime = currentTime;
+
     while (client.connected() && currentTime - previousTime <= timeoutTime) {
       currentTime = millis();
       if (client.available()) {
         char c = client.read();
-        Serial.write(c);
+        //Serial.write(c);
         header += c;
         if (c == '\n') {
+
           if (currentLine.length() == 0) {
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
@@ -139,12 +148,17 @@ void loop() {
               String magState = magState ? "ON" : "OFF";
               refreshDis("Magnet", magState);
             } else if (header.indexOf("GET /rhythm/") >= 0) {
+              //Serial.println("DEBUG CLIENT CONN: " + String(millis() - debugStart));
               String headerGETLine = header.substring(12, header.indexOf("\n") - 9);//Should be in format of: {value}
               Serial.println("In rhythm?: " + headerGETLine);
               commonRhythmFreq = headerGETLine.toInt();
             } else if (header.indexOf("GET /vibVal/") >= 0) {
               String headerGETLine = header.substring(12, header.indexOf("\n") - 9);//Should be in format of: {value}
               Serial.println("In val?: " + headerGETLine);
+              if (headerGETLine.toInt() == 0) {
+                analogWrite(vibMotor, 0);
+                analogWrite(en1, 0);
+              }
               commonIntensityTarget = headerGETLine.toInt();
             } else if (header.indexOf("GET /vibFreq/") >= 0) {
               String headerGETLine = header.substring(13, header.indexOf("\n") - 9);//Should be in format of: {value}
@@ -161,6 +175,7 @@ void loop() {
               int pwmValue = valueString.substring(0, valueString.indexOf("/")).toInt();
               String dir = directionString.substring(0, directionString.indexOf("/"));
               int waitTime = waitString.substring(0, waitString.indexOf("/")).toInt();
+              Serial.println("Hard Actuate: " + valueString);
               useMag ? hardActuate(dir, pwmValue, waitTime) : hardActuateMotor(pwmValue, waitTime);
             } else if (header.indexOf("GET /soft/") >= 0) {
               String headerGETLine = header.substring(9, header.indexOf("\n") - 9); //Should be in format of: {value}/{direction}/{wait time}/{raise value}
@@ -214,13 +229,18 @@ void loop() {
           currentLine += c;      // add it to the end of the currentLine
         }
       }
+
     }
+
     // Clear the header variable
     header = "";
     // Close the connection
-    client.stop();
-    Serial.println("Client disconnected.");
+
+    //client.stop();
+    //Serial.println("DEBUG WHOLE: " + String(millis() - debugStart));
+    //Serial.println("Client disconnected." + String(millis()));
     Serial.println("");
+
   }
 
 
@@ -230,15 +250,13 @@ void loop() {
   //commonIntensityTarget
   //previousMillisVib
   //rhythmState
-
   if (commonIntensityTarget > 0) {  //Should it even actuate?
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= commonRhythmFreq) {
-      previousMillis = currentMillis;
+
+    if (millis() - previousMillis >= commonRhythmFreq) {
+      previousMillis = millis();
 
       if (rhythmState) {
         if (useMag) {
-          Serial.println("KILL MAGNET");
           analogWrite(en1, 0);
           digitalWrite(IN1, LOW);
           digitalWrite(IN2, LOW);
@@ -247,13 +265,13 @@ void loop() {
         }
       } else {
 
-        if (!useMag) analogWrite(vibMotor, commonIntensityTarget);
+        if (!useMag) analogWrite(vibMotor, commonIntensityTarget / 2); //Divided for motor
       }
       rhythmState = !rhythmState;
     }
 
-    if (currentMillis - previousMillisVib >= intervalVib && rhythmState && useMag) {
-      previousMillisVib = currentMillis;
+    if (millis() - previousMillisVib >= intervalVib && rhythmState && useMag) {
+      previousMillisVib = millis();
       //Add if for vib motor ma guy
       analogWrite(en1, commonIntensityTarget);
       vibState ? digitalWrite(IN1, HIGH) : digitalWrite(IN1, LOW);
@@ -262,6 +280,7 @@ void loop() {
     }
 
   }
+
 }
 
 //For later...
@@ -279,7 +298,7 @@ void loop() {
 
 void vibrateMotor(int val, int waitT, int noOfR) {
   refreshDis("Vibrate", " w.:" + String(val));
-  analogWrite(vibMotor, val);
+  analogWrite(vibMotor, val / 2); //Divided for motor
   delay(waitT * noOfR);
   digitalWrite(vibMotor, LOW);
   refreshDis("Vibrate", "Stop");
@@ -352,13 +371,13 @@ void sineVibrate(int val, int waitT, int noOfR, String direc) {
 
 void hardActuateMotor(int targetVal, int waitTime) {
   if (waitTime > 0) {
-    analogWrite(vibMotor, targetVal);
+    analogWrite(vibMotor, targetVal / 2); //Divided for motor
     isDebugMode ? refreshDis("Hard Actuate", "") : refreshDis("Hard Actuate", " w.:" + String(targetVal));
     delay(waitTime);
     digitalWrite(vibMotor, LOW);
     refreshDis("Hard Actuate", "Stopped...");
   } else {
-    analogWrite(vibMotor, targetVal);
+    analogWrite(vibMotor, targetVal / 2); //Divided for motor
     isDebugMode ? refreshDis("Hard Actuate", "") : refreshDis("Hard Actuate", " w.:" + String(targetVal));
   }
 }
